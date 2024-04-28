@@ -44,6 +44,7 @@ const productSchema = new Schema({
     productName: String,
     productRate: Number,
     productQnty: Number,
+    category:String,
 });
 const Product = mongoose.model('Product', productSchema);
 
@@ -99,8 +100,8 @@ app.post('/login', limitLogin, (req, res) => {
 
 // Middleware para verificar el token
 const verifyToken = (req, res, next) => {
-    console.log("headers",req.headers);
-    console.log("token:",req.headers.authorization);
+    console.log("headers", req.headers);
+    console.log("token:", req.headers.authorization);
     const token = req.headers.authorization;
 
     if (!token) {
@@ -136,6 +137,31 @@ app.post('/product', verifyToken, (req, res) => {
         .catch(err => {
             res.status(500).json({ error: err.message });
         });
+});
+
+//actualizar productos
+app.put('/product', verifyToken, (req, res) => {
+
+    console.log(req.body);
+    const { productId, productName, productQnty, productRate, _id } = req.body;
+
+    Product.findByIdAndUpdate({ _id: _id }, {
+        $set: {
+            productId: productId,
+            productName: productName,
+            productRate: productRate,
+            productQnty: productQnty,
+
+        }
+    },{new:true}).then((result) => {
+        res.status(201).json({ msg: 'Update successfully' })
+    }).catch((e) => {
+        console.log(e)
+        res.status(500).json({ msg: 'Internal Server error', e })
+    })
+
+    
+
 });
 
 // Listar productos

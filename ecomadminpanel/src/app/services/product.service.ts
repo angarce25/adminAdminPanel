@@ -31,6 +31,16 @@ export class ProductService {
     return this.http.get(this.url, {headers:headers})
 
   }
+
+  updateProduct(data:any){
+       const headers = new HttpHeaders({
+      'Content-Type':'application/json',
+      'Authorization':this.token
+    })
+
+    return this.http.put(this.url, data, {headers:headers})
+
+  }
 }
 
 

@@ -20,7 +20,7 @@ export class ProductsComponent {
   constructor(
 
     private _product: ProductService,
-    private _router:Router
+    private _router: Router
   ) { }
 
   ngOnInit(): void {
@@ -51,115 +51,124 @@ export class ProductsComponent {
         this.closeModal('addProductModal');
         this.productForm.reset();
 
-       
-      }, 
-      error: (err) => { 
+
+      },
+      error: (err) => {
         console.log(err);
-        if(err.status== 401){
+        if (err.status == 401) {
           this.closeModal('addProductModal');
           Swal.fire({
             title: "Unauthorized",
-            text: 'Login Required!', 
+            text: 'Login Required!',
             icon: "error"
-          }).then(()=>{
+          }).then(() => {
             this._router.navigate(['/'])
           })
-        }else{
+        } else {
           Swal.fire({
             title: "Error",
-            text: 'Please Contact to Web Admin!', 
+            text: 'Please Contact to Web Admin!',
             icon: "error"
           });
         }
 
-       
-      } 
-    }); 
-  
+
+      }
+    });
+
     this.productList.push(this.productForm.value);
     // console.log("product List:", this.productList);
-    
-   
-  }
 
-// modal open method
-index: any;
-openModal(modalId: any, index: any) {
-
-  if (modalId == 'updateProductModal') {
-
-    this.productForm = new FormGroup({
-      productId: new FormControl(this.productList[index].productId),
-      productName: new FormControl(this.productList[index].productName),
-      productQnty: new FormControl(this.productList[index].productQnty),
-      productRate: new FormControl(this.productList[index].productRate),
-
-    })
 
   }
 
+  // modal open method
+  index: any;
+  openModal(modalId: any, index: any) {
+    if (modalId == 'updateProductModal') {
+      const item = this.productList.find((item: { _id: any; }) => item._id == index);
+      if (item) {
+        this.productForm = new FormGroup({
+          productId: new FormControl(item.productId),
+          productName: new FormControl(item.productName),
+          productQnty: new FormControl(item.productQnty),
+          productRate: new FormControl(item.productRate),
+
+        })
+
+        // this.productForm.controls['productId'].setValue(item.productId);
+        // this.productForm.controls['productName'].setValue(item.productName);
+        // this.productForm.controls['productQnty'].setValue(item.productQnty);
+        // this.productForm.controls['productRate'].setValue(item.productRate);
 
 
-  console.log(index);
-  this.index = index;
-  const modalElement: any = document.getElementById(modalId);
-  const modal: any = new bootstrap.Modal(modalElement);
-  modal.show();
-}
 
-closeModal(modalId: any) {
-  const modalElement: any = document.getElementById(modalId);
-  const modal: any = bootstrap.Modal.getInstance(modalElement);
+      }
+    }
+    this.index = index;
+    const modalElement: any = document.getElementById(modalId);
+    const modal: any = new bootstrap.Modal(modalElement);
+    modal.show();
+  }
 
-  if (modal) {
+  closeModal(modalId: any) {
+    const modalElement: any = document.getElementById(modalId);
+    const modal: any = bootstrap.Modal.getInstance(modalElement);
+
+    if (modal) {
+      modal.hide();
+    }
     modal.hide();
   }
-  modal.hide();
-}
 
-delete () {
+  delete() {
 
-  console.log(this.index);
-  console.log(this.productList);
-  this.productList.splice(this.index, 1)
-  this.closeModal('deleteModal')
-}
+    console.log(this.index);
+    console.log(this.productList);
+    this.productList.splice(this.index, 1)
+    this.closeModal('deleteModal')
+  }
 
-update(){
-  console.log(this.productForm.value);
-  this.productList[this.index].productId = this.productForm.value.productId;
-  this.productList[this.index].productName = this.productForm.value.productName;
-  this.productList[this.index].productQnty = this.productForm.value.productQnty;
-  this.productList[this.index].productRate = this.productForm.value.productRate
+  update() {
+    console.log(this.productForm.value);
 
-}
+    this.productForm.value._id=this.index;
+    this._product.updateProduct(this.productForm.value).subscribe({next:(resp)=>{
+      console.log(resp);
+    },error:(err)=>{
+      console.log(err);     
+    }})
+  
+  }
 
-getProducts(){
+  getProducts() {
 
-  this._product.getAllProducts().subscribe({next:(resp)=>{
-    console.log(resp);
-    this.productList = resp;
-  },error:(err)=>{
-    console.log(err);
-    if(err.status== 401){
-      this.closeModal('addProductModal');
-      Swal.fire({
-        title: "Unauthorized",
-        text: 'Login Required!', 
-        icon: "error"
-      }).then(()=>{
-        this._router.navigate(['/'])
-      })
-    }else{
-      Swal.fire({
-        title: "Error",
-        text: 'Please Contact to Web Admin!', 
-        icon: "error"
-      });
-    }
+    this._product.getAllProducts().subscribe({
+      next: (resp) => {
+        console.log(resp);
+        this.productList = resp;
+      }, error: (err) => {
+        console.log(err);
+        if (err.status == 401) {
+          this.closeModal('addProductModal');
+          Swal.fire({
+            title: "Unauthorized",
+            text: 'Login Required!',
+            icon: "error"
+          }).then(() => {
+            this._router.navigate(['/'])
+          })
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: 'Please Contact to Web Admin!',
+            icon: "error"
+          });
+        }
 
 
-  }})
-}
+      }
+    })
+  }
 
 }
