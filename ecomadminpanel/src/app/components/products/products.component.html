@@ -1,0 +1,197 @@
+<div class="container-fluid">
+    <div class="product-section">
+        <button class="btn btn-primary float-end m-3"
+            (click)="openModal('addProductModal',{})">Add+</button>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>Id</th>
+                    <th>Product</th>
+                    <th>Rate</th>
+                    <th>Qnty</th>
+                    <th style="text-align: center;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of productList; track item; let i =$index) {
+                <tr>
+                    <td>{{i+1}}</td>
+                    <td>{{item.productId}}</td>
+                    <td>{{item.productName}}</td>
+                    <td>{{item.productRate}}</td>
+                    <td>{{item.productQnty}}</td>
+                    <td style="text-align: center;">
+                        <div class="btn-group" role="group"
+                            aria-label="Basic mixed styles example">
+                            <button type="button" class="btn btn-success" (click)="openModal('updateProductModal',i)"><i
+                                    class="bi bi-pencil-square" ></i></button>
+                            <button type="button" class="btn btn-danger"
+                                (click)="openModal('deleteModal',i)"><i
+                                    class="bi bi-trash3-fill"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                }
+                @empty {
+                <p>Records not avalaible</p>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- ADD producto modal -->
+<!-- cambiamos el id de la linea 46 y lo hacemos en el # de la linea 41 y luego lo añadimos en la linea4 y borramos el boton de launch del modal -->
+<!-- Modal Add -->
+<div class="modal fade" id="addProductModal" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add New
+                    Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="productForm">
+                    <!-- para activar el formGroup tenemos que importar en el ts el ReactiveFormsModule -->
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <label for="productId" class="form-label">Product
+                                Id<sup>*</sup></label>
+                            <input type="text"
+                                class="form-control form-control-lg w-100 mb-3"
+                                id="productId"
+                                placeholder="Write here product Id..."
+                                formControlName="productId">
+                        </div>
+                        <div class="col-xl-6">
+                            <label for="productName" class="form-label">Product
+                                Name<sup>*</sup></label>
+                            <input type="text"
+                                class=" form-control form-control-lg mb-3"
+                                id="productName"
+                                placeholder="Write here product Name..."
+                                formControlName="productName">
+                        </div>
+                        <div class="col-xl-6">
+                            <label for="productRate" class="form-label">Product
+                                Price<sup>*</sup></label>
+                            <input type="text"
+                                class=" form-control form-control-lg mb-3"
+                                id="productRate"
+                                placeholder="Write here product Price..."
+                                formControlName="productRate">
+                        </div>
+                        <div class="col-xl-6">
+                            <label for="productQnty" class="form-label">Product
+                                Qnty<sup>*</sup></label>
+                            <input type="text"
+                                class=" form-control form-control-lg mb-3"
+                                id="productQnty"
+                                placeholder="Write here product Qnty..."
+                                formControlName="productQnty">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success"
+                    (click)="closeModal('addProductModal')">Close</button>
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"
+                    (click)="submit()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1"
+    aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-danger"
+                    id="deleteModalLabel">Delete</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger">Confirm to delete product?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger"
+                    (click)="delete()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- update products -->
+<div class="modal fade" id="updateProductModal" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update
+                    Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="productForm">
+                    <!-- para activar el formGroup tenemos que importar en el ts el ReactiveFormsModule -->
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <label for="productId" class="form-label">Product
+                                Id<sup>*</sup></label>
+                            <input type="text"
+                                class="form-control form-control-lg w-100 mb-3"
+                                id="productId"
+                                placeholder="Write here product Id..."
+                                formControlName="productId">
+                        </div>
+                        <div class="col-xl-6">
+                            <label for="productName" class="form-label">Product
+                                Name<sup>*</sup></label>
+                            <input type="text"
+                                class=" form-control form-control-lg mb-3"
+                                id="productName"
+                                placeholder="Write here product Name..."
+                                formControlName="productName">
+                        </div>
+                        <div class="col-xl-6">
+                            <label for="productRate" class="form-label">Product
+                                Price<sup>*</sup></label>
+                            <input type="text"
+                                class=" form-control form-control-lg mb-3"
+                                id="productRate"
+                                placeholder="Write here product Price..."
+                                formControlName="productRate">
+                        </div>
+                        <div class="col-xl-6">
+                            <label for="productQnty" class="form-label">Product
+                                Qnty<sup>*</sup></label>
+                            <input type="text"
+                                class=" form-control form-control-lg mb-3"
+                                id="productQnty"
+                                placeholder="Write here product Qnty..."
+                                formControlName="productQnty">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success"
+                    (click)="closeModal('addProductModal')">Close</button>
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"
+                    (click)="update()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
