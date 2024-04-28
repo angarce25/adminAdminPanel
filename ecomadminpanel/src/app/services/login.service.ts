@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class LoginService {
 
-  url="http://localhost:3000/login";
+  url="https://adminadminpanel.onrender.com/login";
 
   constructor(private http:HttpClient) { }
 

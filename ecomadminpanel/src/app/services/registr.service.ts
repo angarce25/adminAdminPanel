@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class RegistrService {
-  url="http://localhost:3000/register";
+  url="https://adminadminpanel.onrender.com/register";
 
   constructor(private http:HttpClient) { }
 
