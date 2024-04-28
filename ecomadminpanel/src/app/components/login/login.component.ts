@@ -39,44 +39,34 @@ export class LoginComponent implements OnInit {
         next: (resp: any) => {
           console.log(resp);
 
-          localStorage.setItem("firstName", resp.result.firstName);
-          localStorage.setItem("lastName", resp.result.lastName);
-          localStorage.setItem("email", resp.result.email);
-          localStorage.setItem("id", resp.result._id);
+          // Verificar que resp.result esté definido
+          if (resp.result) {
+            localStorage.setItem("firstName", resp.result.firstName || '');
+            localStorage.setItem("lastName", resp.result.lastName || '');
+            localStorage.setItem("email", resp.result.email || '');
+            localStorage.setItem("id", resp.result._id || '');
+          }
           localStorage.setItem("token", resp.token);
 
-          let timerInterval: any;
           Swal.fire({
             position: 'top-end',
-            title: "Login Successfull!",
-            html: "I will close in <b></b> milliseconds.",
-            timer: 1000,
+            title: "Login Successful!",
+            text: "Redirecting to dashboard...",
+            icon: "success",
+            timer: 2000,
             timerProgressBar: true,
-            didOpen: () => {
-              Swal.showLoading();
-              const timer: any = Swal.getPopup()?.querySelector("b");
-              timerInterval = setInterval(() => {
-                timer.textContent = `${Swal.getTimerLeft()}`;
-              }, 100);
-            },
-            willClose: () => {
-              clearInterval(timerInterval);
-            }
-          }).then((result) => {
-            if (result.dismiss === Swal.DismissReason.timer) {
-              console.log("I was closed by the timer");
+            showConfirmButton: false,
+            didClose: () => {
               this._router.navigate(['dashboard']);
             }
           });
         },
         error: (err) => {
-          if (err.status == 500) {
-            Swal.fire({
-              title: "Login Failed!",
-              text: err.error.msg, // Use err.error.msg instead of "err.error.msg"
-              icon: "error"
-            });
-          }
+          Swal.fire({
+            title: "Login Failed!",
+            text: err.error.msg || "Unknown error occurred.",
+            icon: "error"
+          });
         }
       });
     }
