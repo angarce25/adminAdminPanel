@@ -75,10 +75,41 @@ app.post('/login', jsonParser, (req, res) => {
     })
 })
 
-//add new product
-app.post('/product',jsonParser,(req,res)=>{
+
+const verifyToken = (req , res , next)=>{
+    console.log("headers",req.headers);
+    console.log("token:",req.headers.authorization);
+
+    const token = req.headers.authorization;
     
-    console.log(req.body)
+   
+        jwt.verify(token, privateKey, function(err,decoded){
+            
+
+            if(err){
+                res.status(401).send({msg:'Invalid Token'})
+            }else{
+
+                console.log(decoded)
+                next();
+            }
+    
+           
+    
+        });
+   
+  
+    
+
+    
+}
+
+
+
+//add new product
+app.post('/product', verifyToken, jsonParser,(req,res)=>{
+    
+   console.log('product api')
     const { productId, productName, productRate, productQnty } = req.body;
 
     const createNewProduct = new Product({
@@ -90,6 +121,9 @@ app.post('/product',jsonParser,(req,res)=>{
     createNewProduct.save().then((result) => {
         res.status(201).json({ msg: "New product added successfully", result })
     })
+
+
+    
 })
 
 

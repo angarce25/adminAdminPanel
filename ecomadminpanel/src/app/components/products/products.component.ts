@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import * as bootstrap from 'bootstrap';
 import { ProductService } from '../../services/product.service';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -17,7 +19,8 @@ export class ProductsComponent {
 
   constructor(
 
-    private _product: ProductService
+    private _product: ProductService,
+    private _router:Router
   ) { }
 
   ngOnInit(): void {
@@ -50,6 +53,24 @@ export class ProductsComponent {
       }, 
       error: (err) => { 
         console.log(err);
+        if(err.status== 401){
+          this.closeModal('addProductModal');
+          Swal.fire({
+            title: "Unauthorized",
+            text: 'Login Required!', 
+            icon: "error"
+          }).then(()=>{
+            this._router.navigate(['/'])
+          })
+        }else{
+          Swal.fire({
+            title: "Error",
+            text: 'Please Contact to Web Admin!', 
+            icon: "error"
+          });
+        }
+
+       
       } 
     }); 
   
