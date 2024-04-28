@@ -27,6 +27,8 @@ export class ProductsComponent {
 
     this.setForm();
 
+    this.getProducts();
+
   }
 
   setForm() {
@@ -130,6 +132,34 @@ update(){
   this.productList[this.index].productQnty = this.productForm.value.productQnty;
   this.productList[this.index].productRate = this.productForm.value.productRate
 
+}
+
+getProducts(){
+
+  this._product.getAllProducts().subscribe({next:(resp)=>{
+    console.log(resp);
+    this.productList = resp;
+  },error:(err)=>{
+    console.log(err);
+    if(err.status== 401){
+      this.closeModal('addProductModal');
+      Swal.fire({
+        title: "Unauthorized",
+        text: 'Login Required!', 
+        icon: "error"
+      }).then(()=>{
+        this._router.navigate(['/'])
+      })
+    }else{
+      Swal.fire({
+        title: "Error",
+        text: 'Please Contact to Web Admin!', 
+        icon: "error"
+      });
+    }
+
+
+  }})
 }
 
 }

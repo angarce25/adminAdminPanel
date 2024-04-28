@@ -126,6 +126,15 @@ app.post('/product', verifyToken, jsonParser,(req,res)=>{
     
 })
 
+//list products
+app.get('/product', verifyToken, (req,res)=>{
+
+    Product.find({}).then((result)=>{
+
+
+        res.status(200).json(result)
+    })
+})
 
 app.listen(port, () => {
     console.log("Server running on port", port)

@@ -21,4 +21,16 @@ export class ProductService {
     return this.http.post(this.url, data, {headers:headers})
 
   }
+
+  getAllProducts(){
+    
+    const headers = new HttpHeaders({
+      'Content-Type':'application/json',
+      'Authorization':this.token
+    })
+    return this.http.get(this.url, {headers:headers})
+
+  }
 }
+
+
