@@ -41,6 +41,10 @@ export class ProductService {
     return this.http.put(this.url, data, {headers:headers})
 
   }
+
+  deleteItem(id:any){
+    return this.http.delete(this.url+'/'+id)
+  }
 }
 
 

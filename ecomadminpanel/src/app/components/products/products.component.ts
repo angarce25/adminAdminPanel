@@ -123,9 +123,25 @@ export class ProductsComponent {
 
   delete() {
 
-    console.log(this.index);
-    console.log(this.productList);
-    this.productList.splice(this.index, 1)
+    
+    this._product.deleteItem(this.index).subscribe({next:(resp:any)=>{
+      console.log(resp);
+      const updatedData= this.productList.filter((item: {_id:any})=> item._id != resp.result._id) 
+      this.productList=[];
+      this.productList=updatedData;
+
+      console.log(updatedData);
+      Swal.fire({
+        title: "Deleted",
+        text: 'Item Deleted Successfully!',
+        icon: "success"
+      })
+      
+      
+    },error:(err)=>{
+      console.log(err);
+      
+    }})
     this.closeModal('deleteModal')
   }
 

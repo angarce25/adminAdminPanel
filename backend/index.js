@@ -175,6 +175,17 @@ app.get('/product', verifyToken, (req, res) => {
         });
 });
 
+//borrar producto
+app.delete("/product/:id", verifyToken, (req,res)=>{
+
+    console.log(req.params.id);
+    Product.findOneAndDelete({_id:req.params.id}).then((result)=>{
+        res.status(200).json({msg:'Item deleted successfully',result})
+    })
+   
+})
+
+
 // Iniciar el servidor
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
