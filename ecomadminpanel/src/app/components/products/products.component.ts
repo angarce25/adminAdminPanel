@@ -135,6 +135,23 @@ export class ProductsComponent {
     this.productForm.value._id=this.index;
     this._product.updateProduct(this.productForm.value).subscribe({next:(resp)=>{
       console.log(resp);
+      this.getProducts()
+      this.closeModal('updateProductModal');
+      let indexNo = this.productList.findIndex((item: { _id:any })=> item._id==this.index);
+      console.log(indexNo)
+
+      if(indexNo){
+        this.productList[indexNo].productId=this.productForm.value.productId;
+        this.productList[indexNo].productName=this.productForm.value.productName;
+        this.productList[indexNo].productQnty=this.productForm.value.productQnty;
+        this.productList[indexNo].productRate=this.productForm.value.productRate;
+
+      }
+      Swal.fire({
+        title: "Update",
+        text: 'Update Successfully',
+        icon: "success"
+      });
     },error:(err)=>{
       console.log(err);     
     }})
