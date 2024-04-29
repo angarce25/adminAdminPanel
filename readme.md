@@ -13,10 +13,10 @@ git clone https://github.com/angarce25/adminAdminPanel.git
 #### Instala las dependencias:
 
 ```bash
-cd MEANADMINPANEL/ECOMMADMINPANEL
+cd adminAdminPanel/ECOMMADMINPANEL
 npm install
 
-cd MEANADMINPANEL/backend
+cd adminAdminPanel/backend
 npm install
 ```
 
