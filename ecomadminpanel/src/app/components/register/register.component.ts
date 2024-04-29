@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RegistrService } from '../../services/registr.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,9 @@ export class RegisterComponent implements OnInit {
 
 
   constructor(
-    private _register: RegistrService
+    private _register: RegistrService,
+    private router: Router 
+
   ) {
 
 
@@ -70,9 +73,10 @@ export class RegisterComponent implements OnInit {
       console.log(this.userRegForm.value);
       this._register.registerUser(this.userRegForm.value).subscribe((response: any) => { // Manejar la respuesta
 
-          console.log(response); // Comprobar la respuesta en la consola
+          console.log(response); 
           this.userRegForm.reset();
           alert(response.msg); 
+          this.router.navigate(['']); 
       });
     } else {
       alert('Please Fill Valid Details...!')
